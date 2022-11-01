@@ -1,0 +1,2 @@
+cx3cr1_midNA
+zoom4, 512, pixel size = 0.336um, FOV = 172um
