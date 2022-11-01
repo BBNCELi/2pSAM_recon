@@ -127,8 +127,10 @@ for angleCount=1:PSFParameters.angleNum
     end
     disp(['PSF ',num2str(angleCount),' generated. ||| Time : ',datestr(now, 'YYYYmmDD_HHMMSS')]);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Save every single psf as .tiff
-    name_everyPSF=['psf_',num2str(angleCount)];
+    name_everyPSF=['psf_all_',num2str(angleCount)];
 %     saveastiff_overwrite(psf,[savePath,'/',name_everyPSF,'.tiff']);
+    psf_thisAngle = psf;
+    save([savePath,'/',name_everyPSF,'.mat'],'psf_thisAngle');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% psf_sum & pupil of this psf
     psf_all(:,:,:,angleCount)=psf;
     pupil_sum = pupil_sum + imtranslate(pupil_lowNA,[PSFParameters.angDistx_pixel(angleCount),PSFParameters.angDisty_pixel(angleCount)]);
