@@ -9,4 +9,5 @@ systemParameters_path = 'data//systemParameters_simu//25X';
 
 %% generate PSFs
 PSFParameters.imagingMode = 'mid';% use 'mid' for mid-NA 2pSAM configuration / use 'min' for min-NA 2pSAM configuration 
-[psf_all,PSFParameters] = PSFsGenerator(PSFParameters,systemParameters_path,PSFs_savePath);
+%%%see PSFsGenerator.m for more PSF parameters
+[psfs,PSFParameters] = PSFsGenerator(PSFParameters,systemParameters_path,PSFs_savePath);
