@@ -45,7 +45,6 @@ title(t,'Phase reconstructed');
 xlabel(t,'Normalized x pupil coordinate');
 ylabel(t,'Normalized y pupil coordinate');
 colorContrast = [-1,1];
-colormap jet
 drawnow
 
 %% reconstruct phase patch by patch
@@ -78,7 +77,8 @@ for i = 1:patchN_x
         
         %% plot
         nexttile(j+patchN_x*(i-1));
-        imshow(pupilPhaseRe_here_circ,colorContrast,Colormap=jet);
+        imshow(pupilPhaseRe_here_circ,colorContrast);
+        colormap(jet)
         drawnow;
     end
 end
