@@ -8,6 +8,6 @@ PSFs_savePath = ['results//PSFs_',datestr(now, 'YYYYmmDD_HHMMSS')];%Check if PSF
 systemParameters_path = 'data//systemParameters_simu//25X';
 
 %% generate PSFs
-PSFParameters.imagingMode = 'mid';% use 'mid' for mid-NA 2pSAM configuration / use 'min' for min-NA 2pSAM configuration 
 %%%see PSFsGenerator.m for more PSF parameters
+PSFParameters.imagingMode = 'mid';% use 'mid' for mid-NA 2pSAM configuration / use 'min' for min-NA 2pSAM configuration 
 [psfs,PSFParameters] = PSFsGenerator(PSFParameters,systemParameters_path,PSFs_savePath);

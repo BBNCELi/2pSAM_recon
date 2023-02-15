@@ -24,21 +24,8 @@ disp('Loading raw data...');
 projs = single(loadtiff([EI_path,'//',EI_name]));
 disp('Raw data loaded');
 
-%% reconstruct - DAO off
-resultSave_path1 = [resultSave_path,'//DAO0']; % save results here
-reconOpts.DAO = 0; % DAO off
-%%%see reconPipeline.m for more reconstruct options
-Xguess = reconPipeline(psfs,projs,PSFParameters,resultSave_path1,reconOpts);
-
-%% reconstruct - DAO on
-resultSave_path2 = [resultSave_path,'//DAO1']; % save results here
+%% reconstruct
+%%%see reconPipeline.m for more options
 reconOpts.DAO = 1; % DAO on
-[~,shiftMap] = reconPipeline(psfs,projs,PSFParameters,resultSave_path2,reconOpts);
-phaseRecon(PSFParameters, shiftMap, resultSave_path2); % phase reconstruction
-
-%% reconstruct - multi-site DAO
-resultSave_path3 = [resultSave_path,'//DAO1_multiSite']; % save results here
-reconOpts.DAO = 1; % DAO on
-reconOpts.DAOOpts.patchN = 2; % (patchN * patchN) patches in total
-[~,shiftMap] = reconPipeline(psfs,projs,PSFParameters,resultSave_path3,reconOpts);
-phaseRecon(PSFParameters, shiftMap, resultSave_path3); % phase reconstruction
+[~,shiftMap] = reconPipeline(psfs,projs,PSFParameters,resultSave_path,reconOpts);
+phaseRecon(PSFParameters, shiftMap, resultSave_path); % phase reconstruction
