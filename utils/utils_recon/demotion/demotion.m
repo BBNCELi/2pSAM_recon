@@ -63,28 +63,50 @@ angDistx_normed = reconOpts.demotionOpts.angDistx_normed;
 angDisty_normed = reconOpts.demotionOpts.angDisty_normed;
 %%%to be saved
 MSE_iter = [];
-motionMap = zeros(reconOpts.demotionOpts.patchN,reconOpts.demotionOpts.patchN,2,angleNum);
-dispMap = zeros(proj_r, proj_c, 2, angleNum, 'single');
+motionMap = zeros(reconOpts.demotionOpts.patchN,reconOpts.demotionOpts.patchN,2,angleNum);%motion map
+dispMap = zeros(proj_r, proj_c, 2, angleNum, 'single');%disparity map
 
+%%%save a copy of projs
+projs_ori = projs; %original projections
 %%%volume initialization
 Xguess_init = initXguess(psfs,projs);
 
 disp('In-frame motion correction start...');
-%% initialization
-% Before iterations of motion correction, we initialize motionMap by 
-% estimating the shifts with centre angle projection directly. This
-% initialization can increase the motion correction robustness when large
-% motions are present.
-projs_ori = projs; %original projections
 
-motionMap_init = shiftToCA(projs_ori,1,'corr'); %we use the simplest correlation 
-motionMap_init = removeDefocusItem(motionMap_init,angDistx_normed,angDisty_normed,1);
-motionMap(:,:,1,:) = motionMap_init(1,:);
-motionMap(:,:,2,:) = motionMap_init(2,:);
-for angleNow = 1:angleNum
-    dispMap(:,:,1,angleNow) = motionMap(:,:,1,angleNow);
-    dispMap(:,:,2,angleNow) = motionMap(:,:,2,angleNow);
-    projs(:,:,angleNow) = imtranslate(squeeze(projs_ori(:,:,angleNow)),[motionMap_init(2,angleNow),motionMap_init(1,angleNow)],'bilinear');
+%% initialization for large motions
+% Before the iterations of motion correction, we add an initialization
+% process for motionMap and dispMap.
+% 
+% We estimate the shifts between projections and the projection at the
+% centre view (CA) to get a shift map. This shift map contains 3 
+% components: shifts induced by motion (which is what we want), shifts
+% induced by defocus (which is the core information for volume
+% reconstruction) and shifts induced by aberrations (which could be
+% estimated later by multi-site DAO methods; note that while tilting and
+% defocus can also be viewed as low-order aberrations, when talking about
+% aberrations here we mean the higher-order ones). When shifts induced by
+% motion and defocus are comparativly large (tens of pixels between
+% projections), aberration-induced shifts are usually small (several pixels
+% between projections) and inhomogenous and thus can be ignored. At the
+% same time, as the shifts induced by defocus have a fixed distribution at
+% different viewpoints and the viewpoints have already been given when
+% modeling PSFs, we can directly (and roughly) estimate the defocus-induced
+% shifts and then subtract it from the shift map. We use this
+% defocus-removed shift map to initialize the motion map and the disparity
+% map. This initializaiton greatly speeds up the convergence especially
+% when large motions are present.
+
+largeMotions = 1;
+if largeMotions
+    motionMap_init = shiftToCA(projs_ori,reconOpts.CAIndex,'corr'); %we use the simplest correlation 
+    motionMap_init = removeDefocusItem(motionMap_init,angDistx_normed,angDisty_normed,reconOpts.CAIndex);
+    motionMap(:,:,1,:) = motionMap_init(1,:);
+    motionMap(:,:,2,:) = motionMap_init(2,:);
+    for angleNow = 1:angleNum
+        dispMap(:,:,1,angleNow) = motionMap(:,:,1,angleNow);
+        dispMap(:,:,2,angleNow) = motionMap(:,:,2,angleNow);
+        projs(:,:,angleNow) = imtranslate(squeeze(projs_ori(:,:,angleNow)),[motionMap_init(2,angleNow),motionMap_init(1,angleNow)],'bilinear');
+    end
 end
 
 %% demotion iterations
