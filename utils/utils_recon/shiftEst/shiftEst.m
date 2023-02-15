@@ -52,7 +52,7 @@ for i = 1 : patchN_x
         img1 = imgRef_patch{i,j};
         img2 = imgMov_patch{i,j};
 
-        %%%estimate shifts using shiftEstFunc
+        %%%estimate shifts using shiftEstFunc to avoid using switch
 %         [shiftMap(i,j,1),shiftMap(i,j,2)] = ...
 %             eval(['shiftEst_',shiftEstFunc,'(img1,img2)']);
         switch shiftEstFunc
