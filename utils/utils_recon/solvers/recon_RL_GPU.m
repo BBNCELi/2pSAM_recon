@@ -78,7 +78,7 @@ if DAO
     DAOOpts = reconOpts.DAOOpts;
     if ~isfield(DAOOpts,'maxIter_init');DAOOpts.maxIter_init = 1;end
     maxIter_init = DAOOpts.maxIter_init;
-    if ~isfield(DAOOpts,'shiftEstFunc');DAOOpts.shiftEstFunc='imregtform';end
+    if ~isfield(DAOOpts,'shiftEstFunc');DAOOpts.shiftEstFunc='corr';end
     if ~isfield(DAOOpts,'patchN');DAOOpts.patchN=1;end
     if ~isfield(DAOOpts,'patchOvFactor');DAOOpts.patchOvFactor=0.1;end
     if ~isfield(DAOOpts,'minPatchSize');DAOOpts.minPatchSize=32;end
