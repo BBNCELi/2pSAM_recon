@@ -146,5 +146,5 @@ tiff.close();
 cd(path_parent);
 warning(warn_old);
 
-% display(sprintf('The file was loaded successfully. Elapsed time : %.3f s.', toc(tStart)));
+display(sprintf('The file was loaded successfully. Elapsed time : %.3f s.', toc(tStart)));
 end
